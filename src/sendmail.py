@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 import argparse
 import configparser
 import json
@@ -11,7 +11,7 @@ from html import escape
 from urllib import request
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read('tg-sendmail.ini')
 main_config = config['main']
 telegram_config = config['telegram']
 
