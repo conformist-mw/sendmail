@@ -1,0 +1,20 @@
+Source: tg-sendmail
+Maintainer: Oleg Smedyuk <conformist.mw@gmail.com>
+Section: python
+Priority: optional
+Build-Depends: debhelper (>=9), python3 (>=3.2), dh-exec (>= 0.23)
+Standards-Version: 0.0.0
+Homepage: https://github.com/conformist-mw/sendmail
+
+Package: tg-sendmail
+Architecture: all
+Section: python
+Priority: optional
+Depends: python3 (>=3.2), ${misc:Depends}
+Description: drop-in /usr/sbin/sendmail replacement to send mails to Telegram
+	To send messages from cron, for example, the operating system
+	 requires MTA to be installed. This package provides a sendmail
+	 utility that can be used by any system application to send
+	 emails to the chat telegram bot.
+Homepage: https://github.com/conformist-mw/sendmail
+
