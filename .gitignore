@@ -1,2 +1,9 @@
 *.log
 *.eml
+.debhelper
+debhelper*
+debian/files
+debian/tg-sendmail.substvars
+debian/tg-sendmail/
+debian/tmp/
+
