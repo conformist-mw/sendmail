@@ -3,6 +3,7 @@ import argparse
 import configparser
 import json
 import logging
+import os
 import sys
 import urllib.error
 from email.parser import Parser
@@ -11,7 +12,15 @@ from html import escape
 from urllib import request
 
 config = configparser.ConfigParser()
-config.read('tg-sendmail.ini')
+config_filepaths = [
+    'sendmail.ini', '/etc/tg-sendmail.ini', '/etc/sendmail.ini',
+]
+for config_filepath in config_filepaths:
+    if os.path.exists(config_filepath):
+        config.read(config_filepath)
+        break
+else:
+    raise ValueError('Cannot find configuration file')
 main_config = config['main']
 telegram_config = config['telegram']
 
