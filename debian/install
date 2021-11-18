@@ -1,4 +1,4 @@
 #!/usr/bin/dh-exec
 src/sendmail.py => usr/bin/sendmail
-src/tg-sendmail.ini etc/tg-sendmail.ini
+src/sendmail.ini => etc/tg-sendmail.ini
 
