@@ -8,7 +8,10 @@ Homepage: https://github.com/conformist-mw/sendmail
 
 Package: tg-sendmail
 Architecture: all
-Section: python
+Conflicts: mail-transport-agent
+Replaces: mail-transport-agent
+Provides: mail-transport-agent
+Section: mail
 Priority: optional
 Depends: python3 (>=3.2), ${misc:Depends}
 Description: drop-in /usr/sbin/sendmail replacement to send mails to Telegram
