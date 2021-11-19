@@ -1,0 +1,11 @@
+Template: tg-sendmail/bot-token
+Type: string
+Description: Bot token that was obtained from BotFather.
+ You can leave it blank and fill it in /etc/tg-sendmail.ini yourself.
+
+Template: tg-sendmail/chat-id
+Type: string
+Description: Chat ID with the bot.
+ You can skip and fill in manually in `/etc/tg-sendmail.ini`.
+ If you don't know it, the `sendmail --get-updates` command will help.
+

@@ -1,0 +1,23 @@
+#!/bin/sh
+
+set -e
+
+. /usr/share/debconf/confmodule
+
+db_get tg-sendmail/bot-token
+
+token="$RET"
+sed -i "s/bot_token=.*/bot_token=${token}/" /etc/tg-sendmail.ini
+
+db_get tg-sendmail/chat-id
+
+chat_id="$RET"
+sed -i "s/chat_id=.*/chat_id=${chat_id}/" /etc/tg-sendmail.ini
+
+touch /var/log/tg-sendmail.log
+chmod 666 /var/log/tg-sendmail.log
+
+sed -i "s%log_path=.*%log_path=/var/log/tg-sendmail.log%" /etc/tg-sendmail.ini
+
+exit 0
+
