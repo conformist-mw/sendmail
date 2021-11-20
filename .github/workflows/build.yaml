@@ -2,8 +2,8 @@ name: Builder
 
 on:
   push:
-    branches:
-      - master
+    tags:
+      - '*'
 
 jobs:
   build:
@@ -28,4 +28,4 @@ jobs:
           artifacts: "../tg-sendmail*"
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: "pre-release"
+          tag: ${{ github.event.inputs.tag }}
