@@ -19,6 +19,8 @@ jobs:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Checkout repo
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Build package
         run: debuild --no-lintian
       - uses: ncipollo/release-action@v1
