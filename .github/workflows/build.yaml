@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install dev deps
-        run: sudo apt install devscripts dh-exec dh-make dh-python
+        run: sudo apt install devscripts debhelper dh-exec dh-make dh-python
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Build package
