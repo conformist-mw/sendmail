@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install dev deps
-        run: apt install devscripts
+        run: sudo apt install devscripts
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Build package
