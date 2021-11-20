@@ -26,3 +26,4 @@ jobs:
           artifacts: "../tg-sendmail*"
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ github.event.inputs.tag }}
