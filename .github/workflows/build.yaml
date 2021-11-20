@@ -15,4 +15,4 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
       - name: Build package
-        run: debuild
+        run: debuild --no-lintian
