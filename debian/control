@@ -2,7 +2,7 @@ Source: tg-sendmail
 Maintainer: Oleg Smedyuk <conformist.mw@gmail.com>
 Section: python
 Priority: optional
-Build-Depends: debhelper-compat (= 13), python3 (>=3.2), dh-exec (>= 0.23)
+Build-Depends: debhelper-compat (= 10), python3 (>=3.2), dh-exec (>= 0.23)
 Standards-Version: 4.5.1
 Homepage: https://github.com/conformist-mw/sendmail
 
