@@ -21,3 +21,8 @@ jobs:
         uses: actions/checkout@v2
       - name: Build package
         run: debuild --no-lintian
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "../tg-sendmail*"
+          prerelease: true
+          token: ${{ secrets.GITHUB_TOKEN }}
