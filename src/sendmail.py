@@ -9,6 +9,7 @@ import urllib.error
 from email.parser import Parser
 from email.utils import parseaddr
 from html import escape
+from mimetypes import guess_type
 from urllib import request
 
 config = configparser.ConfigParser()
@@ -77,6 +78,10 @@ def parse_args():
         description='Drop-in replacement for any MTA sendmail',
     )
     parser.add_argument(
+        '--send-file',
+        help='Send local file to the telegram bot',
+    )
+    parser.add_argument(
         '--get-updates',
         action='store_true',
         help='Run getUpdates method with bot token to achieve chat_id',
@@ -140,6 +145,35 @@ def send(message, token, chat_id):
         logger.debug('Response: %s', res.decode())
 
 
+def send_file(filepath, token, chat_id):
+    body = encode_multipart_formdata(filepath)
+    headers = {
+        'Content-Type': 'multipart/form-data; boundary=boundary',
+    }
+    url = f'https://api.telegram.org/bot{token}/sendDocument?chat_id={chat_id}'
+    req = request.Request(url, body, headers)
+    with urllib.request.urlopen(req) as response:
+        res = response.read()
+        logger.debug('Response: %s', res.decode())
+
+
+def encode_multipart_formdata(filepath):
+    filename = os.path.basename(filepath)
+    mimetype, _ = guess_type(filepath)
+    mimetype = mimetype or 'application/octet-stream'
+    with open(filepath, 'rb') as file:
+        content = file.read()
+    return b'\r\n'.join([
+        b'--boundary',
+        b'Content-Disposition: form-data; name="document"; '
+        b'filename="%s"' % filename.encode(),
+        b'Content-Type: %s' % mimetype.encode(),
+        b'',
+        b'%s' % content,
+        b'--boundary--',
+    ])
+
+
 if __name__ == '__main__':
     chat_id = telegram_config['chat_id']
     bot_token = telegram_config['bot_token']
@@ -147,6 +181,11 @@ if __name__ == '__main__':
     if args.get_updates:
         # used to get know chat_id
         get_updates(bot_token)
+        exit()
+    elif args.send_file:
+        if not os.path.exists(args.send_file):
+            raise ValueError(f'File {args.send_file} does not exists!')
+        send_file(args.send_file, bot_token, chat_id)
         exit()
     email = prepare_email(args.F, args.f, args.remains, args.t)
     logger.debug('Prepared email: %s', email.as_string())
