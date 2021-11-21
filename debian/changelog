@@ -1,3 +1,9 @@
+tg-sendmail (0.2.1) stable; urgency=medium
+
+  * added ability to send files 
+
+ -- Oleg Smedyuk <conformist.mw@gmail.com>  Sun, 21 Nov 2021 17:18:04 +0200
+
 tg-sendmail (0.2.0) stable; urgency=medium
 
   * added interactive interface to configure package
