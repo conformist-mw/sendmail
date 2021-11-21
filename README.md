@@ -53,14 +53,14 @@ After installation, you can check how it works for cron tasks, which notify the 
 ```shell
 * * * * * /usr/bin/non-existent-command
 ```
-[![Failed cron job](https://user-images.githubusercontent.com/13550539/142764635-af564b8e-532e-4981-a6e2-d4974a8d1f79.png)
+![Failed cron job](https://user-images.githubusercontent.com/13550539/142764635-af564b8e-532e-4981-a6e2-d4974a8d1f79.png)
 
 Send emails:
 
 ```shell
 $ echo 'Mail from the server' | mail -s 'Test subject' conformist.mw@gmail.com
 ```
-[![Sent email](https://user-images.githubusercontent.com/13550539/142764816-0109b90f-cef7-4282-8ca1-d81a9024335d.png)]
+![Sent email](https://user-images.githubusercontent.com/13550539/142764816-0109b90f-cef7-4282-8ca1-d81a9024335d.png)
 
 Send files (see telegram bot api [limitations](https://core.telegram.org/bots/api#sending-files)):
 
@@ -68,5 +68,5 @@ Send files (see telegram bot api [limitations](https://core.telegram.org/bots/ap
 $ sendmail --send-file /var/log/tg-sendmail.log
 ```
 
-[![Sent file](https://user-images.githubusercontent.com/13550539/142765226-ba5d978f-a9af-4c70-bb7f-935c2e3f2f8f.png)]
+![Sent file](https://user-images.githubusercontent.com/13550539/142765226-ba5d978f-a9af-4c70-bb7f-935c2e3f2f8f.png)
 
