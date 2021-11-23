@@ -1,3 +1,10 @@
+tg-sendmail (0.2.2) stable; urgency=medium
+
+  * Added nodename to the message header
+  * Do not try to send message without credentials 
+
+ -- Oleg Smedyuk <conformist.mw@gmail.com>  Tue, 23 Nov 2021 13:14:18 +0200
+
 tg-sendmail (0.2.1) stable; urgency=medium
 
   * added ability to send files 
