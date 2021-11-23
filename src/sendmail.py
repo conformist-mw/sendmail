@@ -119,7 +119,7 @@ def prepare_email(sender_name, sender_address, remains, parse_to_header):
 
 
 def generate_message(email):
-    message = []
+    message = [f'Node: <b>{os.uname().nodename}</b>\n']
     for header, value in email.items():
         message.append(f'<i>{escape(header)}:</i> <b>{escape(value)}</b>')
     message.append('\n')
@@ -177,6 +177,7 @@ def encode_multipart_formdata(filepath):
 if __name__ == '__main__':
     chat_id = telegram_config['chat_id']
     bot_token = telegram_config['bot_token']
+    valid_credentials = chat_id and bot_token
     args, unknown_args = parse_args()
     if args.get_updates:
         # used to get know chat_id
@@ -185,10 +186,16 @@ if __name__ == '__main__':
     elif args.send_file:
         if not os.path.exists(args.send_file):
             raise ValueError(f'File {args.send_file} does not exists!')
+        if not valid_credentials:
+            logger.warning('Please fill /etc/tg-sendmail.ini configuration file!')
+            exit(1)
         send_file(args.send_file, bot_token, chat_id)
         exit()
     email = prepare_email(args.F, args.f, args.remains, args.t)
     logger.debug('Prepared email: %s', email.as_string())
     message = generate_message(email)
     logger.debug('Prepared message: %s', message)
+    if not valid_credentials:
+        logger.warning('Please fill /etc/tg-sendmail.ini configuration file!')
+        exit(1)
     send(message, bot_token, chat_id)
