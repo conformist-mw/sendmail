@@ -1,5 +1,5 @@
 Source: tg-sendmail
-Maintainer: Oleg Smedyuk <conformist.mw@gmail.com>
+Maintainer: Oleg Smedyuk <oleg.smedyuk@gmail.com>
 Section: python
 Priority: optional
 Build-Depends: debhelper-compat (= 10), python3 (>=3.2), dh-exec (>= 0.23)

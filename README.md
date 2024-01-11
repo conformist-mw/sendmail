@@ -58,7 +58,7 @@ After installation, you can check how it works for cron tasks, which notify the 
 Send emails:
 
 ```shell
-$ echo 'Mail from the server' | mail -s 'Test subject' conformist.mw@gmail.com
+$ echo 'Mail from the server' | mail -s 'Test subject' oleg.smedyuk@gmail.com
 ```
 ![Sent email](https://user-images.githubusercontent.com/13550539/142764816-0109b90f-cef7-4282-8ca1-d81a9024335d.png)
 
