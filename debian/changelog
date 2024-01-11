@@ -1,3 +1,9 @@
+tg-sendmail (0.3.1) stable; urgency=medium
+
+  * fix changelog format, update email, gpg
+
+ -- Oleg Smedyuk <oleg.smedyuk@gmail.com>  Thu, 11 Jan 2024 21:14:00 +0200
+
 tg-sendmail (0.3.0) stable; urgency=medium
 
   * Fixed bug with too long messages (max 4096 characters)
