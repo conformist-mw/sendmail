@@ -12,6 +12,8 @@ from html import escape
 from mimetypes import guess_type
 from urllib import request
 
+TG_MAX_TEXT_LENGTH = 4096
+
 config = configparser.ConfigParser()
 config_filepaths = [
     'sendmail.ini', '/etc/tg-sendmail.ini', '/etc/sendmail.ini',
@@ -128,7 +130,14 @@ def generate_message(email):
 
 
 def send(message, token, chat_id):
+    long_message = ''
     url = f'https://api.telegram.org/bot{token}/sendMessage'
+    if len(message) > TG_MAX_TEXT_LENGTH:
+        long_message = message
+        message = (
+            f'{message[:500]}\n\n'
+            '<b>Message is too long. See attached file below</b>'
+        )
     payload = {
         'chat_id': chat_id,
         'text': message,
@@ -140,34 +149,42 @@ def send(message, token, chat_id):
     }
     data = json.dumps(payload).encode()
     req = request.Request(url, data, headers)
-    with urllib.request.urlopen(req) as response:
+    with request.urlopen(req) as response:
         res = response.read()
         logger.debug('Response: %s', res.decode())
+    if long_message:
+        send_file("long_message.txt", long_message.encode(), token, chat_id)
 
 
-def send_file(filepath, token, chat_id):
-    body = encode_multipart_formdata(filepath)
+def send_file(filepath, content, token, chat_id):
+    body = encode_multipart_formdata(filepath, content)
+    print(body)
     headers = {
         'Content-Type': 'multipart/form-data; boundary=boundary',
     }
     url = f'https://api.telegram.org/bot{token}/sendDocument?chat_id={chat_id}'
     req = request.Request(url, body, headers)
-    with urllib.request.urlopen(req) as response:
+    with request.urlopen(req) as response:
         res = response.read()
         logger.debug('Response: %s', res.decode())
 
 
-def encode_multipart_formdata(filepath):
-    filename = os.path.basename(filepath)
-    mimetype, _ = guess_type(filepath)
-    mimetype = mimetype or 'application/octet-stream'
+def read_content(filepath):
     with open(filepath, 'rb') as file:
-        content = file.read()
+        return file.read()
+
+
+def get_content_type(filepath):
+    mimetype, _ = guess_type(filepath)
+    return mimetype or 'application/octet-stream'
+
+
+def encode_multipart_formdata(filepath: str, content: bytes):
     return b'\r\n'.join([
         b'--boundary',
         b'Content-Disposition: form-data; name="document"; '
-        b'filename="%s"' % filename.encode(),
-        b'Content-Type: %s' % mimetype.encode(),
+        b'filename="%s"' % os.path.basename(filepath).encode(),
+        b'Content-Type: %s' % get_content_type(filepath).encode(),
         b'',
         b'%s' % content,
         b'--boundary--',
@@ -189,7 +206,7 @@ if __name__ == '__main__':
         if not valid_credentials:
             logger.warning('Please fill /etc/tg-sendmail.ini configuration file!')
             exit(1)
-        send_file(args.send_file, bot_token, chat_id)
+        send_file(args.send_file, read_content(args.send_file), bot_token, chat_id)
         exit()
     email = prepare_email(args.F, args.f, args.remains, args.t)
     logger.debug('Prepared email: %s', email.as_string())
