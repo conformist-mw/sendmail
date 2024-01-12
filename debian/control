@@ -20,4 +20,3 @@ Description: drop-in /usr/sbin/sendmail replacement to send mails to Telegram
 	 utility that can be used by any system application to send
 	 emails to the chat telegram bot.
 Homepage: https://github.com/conformist-mw/sendmail
-

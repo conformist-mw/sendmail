@@ -8,4 +8,3 @@ Type: string
 Description: Chat ID with the bot.
  You can skip and fill in manually in `/etc/tg-sendmail.ini`.
  If you don't know it, the `sendmail --get-updates` command will help.
-

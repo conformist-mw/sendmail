@@ -10,4 +10,3 @@ db_input high tg-sendmail/chat-id || true
 db_go
 
 exit 0
-

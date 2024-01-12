@@ -158,7 +158,6 @@ def send(message, token, chat_id):
 
 def send_file(filepath, content, token, chat_id):
     body = encode_multipart_formdata(filepath, content)
-    print(body)
     headers = {
         'Content-Type': 'multipart/form-data; boundary=boundary',
     }

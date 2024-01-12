@@ -20,4 +20,3 @@ chmod 666 /var/log/tg-sendmail.log
 sed -i "s%log_path=.*%log_path=/var/log/tg-sendmail.log%" /etc/tg-sendmail.ini
 
 exit 0
-

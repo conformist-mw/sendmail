@@ -1,3 +1,9 @@
+tg-sendmail (0.3.2) stable; urgency=medium
+
+  * remove extra lines, remove forgotten debug output
+
+ -- Oleg Smedyuk <oleg.smedyuk@gmail.com>  Thu, 12 Jan 2024 18:47:00 +0200
+
 tg-sendmail (0.3.1) stable; urgency=medium
 
   * fix changelog format, update email, gpg
@@ -35,4 +41,3 @@ tg-sendmail (0.1.0) stable; urgency=medium
   * Setup full debian package build
 
  -- Oleg Smedyuk <conformist.mw@gmail.com>  Thu, 11 Nov 2021 19:56:19 +0200
-
