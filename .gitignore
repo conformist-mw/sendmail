@@ -7,3 +7,7 @@ debian/tg-sendmail.substvars
 debian/tg-sendmail/
 debian/tmp/
 debian/tg-sendmail.postrm.debhelper
+
+# Go binaries
+sendmail
+sendmail-linux-*
