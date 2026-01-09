@@ -14,6 +14,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -21,10 +23,14 @@ const (
 )
 
 type Config struct {
-	LogLevel string
-	LogPath  string
-	ChatID   string
-	BotToken string
+	Log struct {
+		Level string `yaml:"level"`
+		Path  string `yaml:"path"`
+	} `yaml:"log"`
+	Telegram struct {
+		BotToken string `yaml:"bot_token"`
+		ChatID   string `yaml:"chat_id"`
+	} `yaml:"telegram"`
 }
 
 var (
@@ -35,9 +41,9 @@ var (
 func init() {
 	// Try to load config from multiple locations
 	configPaths := []string{
-		"sendmail.ini",
-		"/etc/tg-sendmail.ini",
-		"/etc/sendmail.ini",
+		"sendmail.yaml",
+		"/etc/tg-sendmail.yaml",
+		"/etc/sendmail.yaml",
 	}
 
 	var configFound bool
@@ -56,7 +62,7 @@ func init() {
 	}
 
 	// Setup logging
-	logFile, err := os.OpenFile(config.LogPath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	logFile, err := os.OpenFile(config.Log.Path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -69,42 +75,7 @@ func loadConfig(path string) error {
 		return err
 	}
 
-	lines := strings.Split(string(data), "\n")
-	section := ""
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, ";") || strings.HasPrefix(line, "#") {
-			continue
-		}
-		if strings.HasPrefix(line, "[") && strings.HasSuffix(line, "]") {
-			section = strings.Trim(line, "[]")
-			continue
-		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		key := strings.TrimSpace(parts[0])
-		value := strings.TrimSpace(parts[1])
-
-		switch section {
-		case "main":
-			switch key {
-			case "log_level":
-				config.LogLevel = value
-			case "log_path":
-				config.LogPath = value
-			}
-		case "telegram":
-			switch key {
-			case "chat_id":
-				config.ChatID = value
-			case "bot_token":
-				config.BotToken = value
-			}
-		}
-	}
-	return nil
+	return yaml.Unmarshal(data, &config)
 }
 
 func getUpdates(token string) {
@@ -339,8 +310,8 @@ func main() {
 		}
 	}
 
-	chatID := config.ChatID
-	botToken := config.BotToken
+	chatID := config.Telegram.ChatID
+	botToken := config.Telegram.BotToken
 	validCredentials := chatID != "" && botToken != ""
 
 	if *getUpdatesFlag {
