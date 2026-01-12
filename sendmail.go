@@ -325,7 +325,7 @@ func main() {
 			os.Exit(1)
 		}
 		if !validCredentials {
-			logger.Println("Please fill /etc/tg-sendmail.ini configuration file!")
+			logger.Println("Please fill /etc/tg-sendmail.yaml configuration file!")
 			os.Exit(1)
 		}
 		content, err := readContent(*sendFileFlag)
@@ -357,7 +357,7 @@ func main() {
 	logger.Printf("Prepared message: %s\n", message)
 
 	if !validCredentials {
-		logger.Println("Please fill /etc/tg-sendmail.ini configuration file!")
+		logger.Println("Please fill /etc/tg-sendmail.yaml configuration file!")
 		os.Exit(1)
 	}
 
