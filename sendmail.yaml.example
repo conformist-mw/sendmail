@@ -1,0 +1,13 @@
+# Logging configuration
+log:
+  level: debug
+  path: sendmail.log
+
+# Telegram bot configuration
+telegram:
+  # Get your bot token from @BotFather on Telegram
+  bot_token: "YOUR_BOT_TOKEN_HERE"
+  
+  # Get your chat ID by running: just get-chat-id
+  # (after sending a message to your bot)
+  chat_id: "YOUR_CHAT_ID_HERE"

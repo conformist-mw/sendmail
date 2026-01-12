@@ -11,3 +11,6 @@ debian/tg-sendmail.postrm.debhelper
 # Go binaries
 sendmail
 sendmail-linux-*
+
+# Local configuration
+sendmail.yaml
