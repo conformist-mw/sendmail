@@ -2,3 +2,10 @@
 
 %:
 	dh $@
+
+override_dh_auto_build:
+	go build -ldflags="-s -w" -o sendmail sendmail.go
+
+override_dh_auto_clean:
+	rm -f sendmail
+	dh_auto_clean

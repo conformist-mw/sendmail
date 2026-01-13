@@ -1,3 +1,10 @@
+tg-sendmail (0.4.0) stable; urgency=medium
+
+  * Rewritten in Go for better performance and no runtime dependencies
+  * Drop-in replacement for Python implementation
+
+ -- Oleg Smedyuk <oleg.smedyuk@gmail.com>  Mon, 13 Jan 2025 22:44:00 +0200
+
 tg-sendmail (0.3.2) stable; urgency=medium
 
   * remove extra lines, remove forgotten debug output

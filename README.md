@@ -27,10 +27,11 @@ There are two ways to install it:
 
 2. Manual
     - clone this repo
-    - copy files to their destinations:
+    - build and copy files to their destinations:
    ```shell
-    sudo cp src/sendmail.py /usr/sbin/sendmail
-    sudo cp src/sendmail.ini /etc/tg-sendmail.ini  # fill values
+    make build
+    sudo cp sendmail /usr/sbin/sendmail
+    sudo cp sendmail.yaml.example /etc/tg-sendmail.yaml  # fill values
     sudo touch /var/log/tg-sendmail.log
     sudo chmod 666 /var/log/tg-sendmail.log
    ```
