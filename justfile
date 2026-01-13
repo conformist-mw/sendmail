@@ -22,11 +22,11 @@ send-file FILE:
 
 # Send a test email via stdin
 send-email:
-    @echo -e "Subject: Test Email\nFrom: test@example.com\nTo: recipient@example.com\n\nThis is a test email body." | ./sendmail
+    @echo "Subject: Test Email\nFrom: test@example.com\nTo: recipient@example.com\n\nThis is a test email body." | ./sendmail
 
 # Send a custom email with specific sender
 send-email-custom SUBJECT BODY:
-    @echo -e "Subject: {{SUBJECT}}\n\n{{BODY}}" | ./sendmail -f sender@example.com
+    @echo "Subject: {{SUBJECT}}\n\n{{BODY}}" | ./sendmail -f sender@example.com
 
 # Run the program (reads email from stdin)
 run:
