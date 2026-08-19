@@ -36,15 +36,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      # Recommends of devscripts pull in an MTA whose debconf prompt hangs the
-      # runner, so install the build tooling only.
+      # build-essential is already on the runner; installing it pulls libc6-dev,
+      # and the needrestart hook then blocks on an interactive prompt.
       - name: Install dev deps
         env:
           DEBIAN_FRONTEND: noninteractive
+          NEEDRESTART_MODE: a
+          NEEDRESTART_SUSPEND: 1
         run: |
           sudo apt-get update -qq
           sudo -E apt-get install -y --no-install-recommends \
-            build-essential devscripts debhelper dh-exec golang-go
+            devscripts debhelper dh-exec golang-go
       - name: Configure GPG Key
         run: |
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
