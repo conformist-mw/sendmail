@@ -1,0 +1,11 @@
+/var/log/tg-sendmail.log {
+	weekly
+	rotate 4
+	missingok
+	notifempty
+	compress
+	delaycompress
+	# Any user may send mail, so the fresh log has to stay writable by all of
+	# them, otherwise logging silently stops for non-root senders after a rotation.
+	create 666 root root
+}

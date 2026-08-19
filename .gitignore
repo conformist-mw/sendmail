@@ -7,3 +7,13 @@ debian/tg-sendmail.substvars
 debian/tg-sendmail/
 debian/tmp/
 debian/tg-sendmail.postrm.debhelper
+
+# Go binaries
+sendmail
+sendmail-linux-*
+
+# Local configuration
+sendmail.yaml
+
+# Go build cache used by the debian build
+.gocache/

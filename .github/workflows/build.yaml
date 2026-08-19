@@ -2,30 +2,66 @@ name: Builder
 
 on:
   push:
+    branches:
+      - master
     tags:
       - '*'
+  pull_request:
 
 jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+      - name: Check formatting
+        run: |
+          files=$(gofmt -l *.go)
+          test -z "$files" || (echo "$files" && exit 1)
+      - name: Vet
+        run: go vet ./...
+      - name: Test
+        run: go test ./...
+
   build:
     name: Build
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - name: Install dev deps
-        run: sudo apt install devscripts debhelper dh-exec dh-make dh-python
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y devscripts debhelper dh-exec dh-make golang-go
       - name: Configure GPG Key
         run: |
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
         env:
           GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Build package
+      - name: Build package for amd64
         run: debuild --no-lintian
+      # The package is architecture-dependent since the Go rewrite, so the
+      # arm variants have to be cross-built. CGO is off, so no cross toolchain
+      # is needed and the build-dependency check is skipped.
+      - name: Cross-build packages for arm
+        run: |
+          for arch in arm64 armhf; do
+            dpkg-buildpackage --host-arch "$arch" --build=any -d -us -uc
+          done
+      - name: List artifacts
+        run: ls -l ../tg-sendmail*
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "../tg-sendmail*"
+          artifacts: "../tg-sendmail*.deb"
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.event.inputs.tag }}
+          tag: ${{ github.ref_name }}

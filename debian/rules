@@ -1,4 +1,49 @@
 #!/usr/bin/make -f
 
+include /usr/share/dpkg/architecture.mk
+include /usr/share/dpkg/pkg-info.mk
+
+# A static binary keeps the package free of runtime dependencies and lets the
+# arm builds cross-compile without a C toolchain.
+export CGO_ENABLED = 0
+# Dependencies are vendored so the build never needs network access.
+export GOFLAGS = -mod=vendor
+export GOPROXY = off
+# The build user may have no writable HOME under sbuild.
+export GOCACHE = $(CURDIR)/.gocache
+
+GOARCH_amd64 = amd64
+GOARCH_i386 = 386
+GOARCH_arm64 = arm64
+GOARCH_armhf = arm
+GOARCH_armel = arm
+export GOARCH = $(GOARCH_$(DEB_HOST_ARCH))
+export GOARM = $(if $(filter armhf,$(DEB_HOST_ARCH)),7,)
+
 %:
 	dh $@
+
+override_dh_auto_build:
+	go build -trimpath -ldflags="-s -w -X main.version=$(DEB_VERSION)" -o sendmail .
+
+override_dh_auto_test:
+ifeq ($(DEB_BUILD_ARCH),$(DEB_HOST_ARCH))
+	go test ./...
+else
+	@echo "skipping tests: cross build for $(DEB_HOST_ARCH)"
+endif
+
+# The binary and the config are placed by debian/install.
+override_dh_auto_install:
+	@:
+
+override_dh_auto_clean:
+	rm -rf sendmail .gocache
+
+# The binary is statically linked and the linker already stripped it, so the
+# helpers that would need a target-architecture toolchain have nothing to do.
+override_dh_strip:
+	@:
+
+override_dh_shlibdeps:
+	@:

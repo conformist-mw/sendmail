@@ -1,3 +1,29 @@
+tg-sendmail (0.4.0) stable; urgency=medium
+
+  * Rewritten in Go for better performance and no runtime dependencies
+  * Drop-in replacement for Python implementation
+  * Configuration moved from INI to YAML
+  * Accept the full set of sendmail options, including attached values
+    (-froot@host) and options after recipients; unknown options are ignored
+    instead of rejecting the message
+  * Accept messages that do not start with headers
+  * Report Telegram API failures instead of exiting successfully
+  * Measure the message length in characters, so that non-ASCII messages are
+    not split into an attachment too early or cut mid-character
+  * Keep headers in the order they were submitted
+  * Keep the bot token out of the world-readable log
+  * Honour the configured log level
+  * Time out API calls instead of hanging a cron job
+  * Package is now architecture-dependent and built for amd64, arm64 and armhf
+  * Log a line for every delivered message, so that an idle log can be told
+    apart from a broken installation
+  * Strip stray quotes and whitespace from the configured credentials
+  * Explain the getUpdates conflict caused by a registered webhook
+  * Migrate credentials from the pre-0.4.0 INI file on upgrade
+  * Rotate /var/log/tg-sendmail.log, keeping it writable by every sender
+
+ -- Oleg Smedyuk <oleg.smedyuk@gmail.com>  Sun, 16 Aug 2026 20:34:00 +0000
+
 tg-sendmail (0.3.2) stable; urgency=medium
 
   * remove extra lines, remove forgotten debug output
