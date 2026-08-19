@@ -36,41 +36,34 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      # build-essential is already on the runner; installing it pulls libc6-dev,
-      # and the needrestart hook then blocks on an interactive prompt.
-      - name: Install dev deps
-        env:
-          DEBIAN_FRONTEND: noninteractive
-          NEEDRESTART_MODE: a
-          NEEDRESTART_SUSPEND: 1
-        run: |
-          sudo apt-get update -qq
-          sudo -E apt-get install -y --no-install-recommends \
-            devscripts debhelper dh-exec golang-go
-      - name: Configure GPG Key
-        run: |
-          echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
-        env:
-          GPG_SIGNING_KEY: ${{ secrets.GPG_SIGNING_KEY }}
       - name: Checkout repo
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Build package for amd64
-        run: debuild --no-lintian
-      # The package is architecture-dependent since the Go rewrite, so the
-      # arm variants have to be cross-built. CGO is off, so no cross toolchain
-      # is needed and the build-dependency check is skipped.
-      - name: Cross-build packages for arm
+      # The packages are built inside Debian stable rather than with the
+      # runner's own toolchain: it pins the build environment to the oldest
+      # release the package targets, and keeps the job off the runner's apt.
+      - name: Build packages
         run: |
-          for arch in arm64 armhf; do
-            dpkg-buildpackage --host-arch "$arch" --build=any -d -us -uc
-          done
+          docker run --rm -v "$PWD":/src -w /src debian:bookworm bash -c '
+            set -e
+            export DEBIAN_FRONTEND=noninteractive
+            apt-get update -qq
+            apt-get install -y -qq --no-install-recommends \
+              build-essential debhelper dh-exec golang-go
+            dpkg-buildpackage --build=any -us -uc
+            for arch in arm64 armhf; do
+              dpkg-buildpackage --host-arch "$arch" --build=any -d -us -uc
+            done
+            mkdir -p /src/dist
+            cp /tg-sendmail_*.deb /src/dist/
+            chown -R '"$(id -u):$(id -g)"' /src/dist
+          '
       - name: List artifacts
-        run: ls -l ../tg-sendmail*
+        run: ls -l dist
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "../tg-sendmail*.deb"
+          artifacts: "dist/*.deb"
           prerelease: true
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}

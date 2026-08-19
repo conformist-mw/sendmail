@@ -241,8 +241,20 @@ func truncateRunes(s string, n int) string {
 	return s
 }
 
+// textExtensions covers the files this tool actually sends. A minimal system
+// carries no MIME database for mime.TypeByExtension to consult, and a log
+// would then be announced as an opaque blob.
+var textExtensions = map[string]bool{
+	".txt": true, ".log": true, ".conf": true, ".cfg": true,
+	".ini": true, ".yaml": true, ".yml": true, ".md": true,
+}
+
 func contentType(name string) string {
-	if ct := mime.TypeByExtension(filepath.Ext(name)); ct != "" {
+	ext := strings.ToLower(filepath.Ext(name))
+	if textExtensions[ext] {
+		return "text/plain; charset=utf-8"
+	}
+	if ct := mime.TypeByExtension(ext); ct != "" {
 		return ct
 	}
 	return "application/octet-stream"

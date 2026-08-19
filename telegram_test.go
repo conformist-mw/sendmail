@@ -192,12 +192,21 @@ func TestTruncateRunes(t *testing.T) {
 	}
 }
 
+// The mapping must not depend on a system MIME database, which a container or
+// a stripped-down server does not have.
 func TestContentType(t *testing.T) {
-	if got := contentType("/var/log/syslog.txt"); !strings.HasPrefix(got, "text/plain") {
-		t.Errorf("contentType(.txt) = %q, want text/plain", got)
+	tests := map[string]string{
+		"/var/log/syslog.txt":             "text/plain; charset=utf-8",
+		"/var/log/tg-sendmail.log":        "text/plain; charset=utf-8",
+		"/etc/tg-sendmail.YAML":           "text/plain; charset=utf-8",
+		"/tmp/shot.png":                   "image/png",
+		"/var/log/tg-sendmail.unknownext": "application/octet-stream",
+		"/var/log/noextension":            "application/octet-stream",
 	}
-	if got := contentType("/var/log/tg-sendmail.unknownext"); got != "application/octet-stream" {
-		t.Errorf("contentType(unknown) = %q", got)
+	for name, want := range tests {
+		if got := contentType(name); got != want {
+			t.Errorf("contentType(%q) = %q, want %q", name, got, want)
+		}
 	}
 }
 
