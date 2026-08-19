@@ -1,13 +1,14 @@
 # Logging configuration
 log:
-  level: debug
-  path: sendmail.log
+  # debug logs the message payloads sent to Telegram
+  level: info
+  path: /var/log/tg-sendmail.log
 
 # Telegram bot configuration
 telegram:
   # Get your bot token from @BotFather on Telegram
   bot_token: "YOUR_BOT_TOKEN_HERE"
-  
-  # Get your chat ID by running: just get-chat-id
+
+  # Get your chat ID by running: sendmail --get-updates
   # (after sending a message to your bot)
   chat_id: "YOUR_CHAT_ID_HERE"

@@ -2,7 +2,7 @@ Source: tg-sendmail
 Maintainer: Oleg Smedyuk <oleg.smedyuk@gmail.com>
 Section: mail
 Priority: optional
-Build-Depends: debhelper-compat (= 10), golang-go (>= 1.16), dh-exec (>= 0.23)
+Build-Depends: debhelper-compat (= 10), golang-go:native (>= 2:1.18~), dh-exec:native (>= 0.23)
 Standards-Version: 4.5.1
 Homepage: https://github.com/conformist-mw/sendmail
 
@@ -13,7 +13,7 @@ Replaces: mail-transport-agent
 Provides: mail-transport-agent
 Section: mail
 Priority: optional
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends: ${misc:Depends}
 Description: drop-in /usr/sbin/sendmail replacement to send mails to Telegram
 	To send messages from cron, for example, the operating system
 	 requires MTA to be installed. This package provides a sendmail

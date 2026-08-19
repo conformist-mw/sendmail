@@ -15,10 +15,11 @@ This project exists to simplify the notification to the end user. In Linux all p
 There are two ways to install it:
 
 1. Recommended
-    - go to [Releases](https://github.com/conformist-mw/sendmail/releases) and download current `tg-sendmail_x.x.x_all.deb`
+    - go to [Releases](https://github.com/conformist-mw/sendmail/releases) and download the current
+      `tg-sendmail_x.x.x_<arch>.deb` for your architecture (`amd64`, `arm64` or `armhf`)
     - install:
     ```shell
-    sudo apt install ./tg-sendmail_x.x.x_all.deb
+    sudo apt install ./tg-sendmail_x.x.x_amd64.deb
     ```
     - optionally (to send mails as user):
    ```shell
@@ -36,13 +37,30 @@ There are two ways to install it:
     sudo chmod 666 /var/log/tg-sendmail.log
    ```
 
+The installed package contains a compiled static binary, so Go is only needed
+to build it, never on the machine where it is installed.
+
 ### Build package yourself
 
 ```shell
 git clone https://github.com/conformist-mw/sendmail
 cd sendmail
-sudo apt install devscripts debhelper dh-exec dh-make dh-python
+sudo apt install devscripts debhelper dh-exec dh-make golang-go
 debuild --no-lintian
+```
+
+Dependencies are vendored, so the build needs no network access. To build for
+another architecture:
+
+```shell
+dpkg-buildpackage --host-arch arm64 --build=any -d -us -uc
+```
+
+### Development
+
+```shell
+make test   # run the tests
+make lint   # gofmt and go vet
 ```
 
 ### Usage
@@ -62,6 +80,18 @@ Send emails:
 $ echo 'Mail from the server' | mail -s 'Test subject' oleg.smedyuk@gmail.com
 ```
 ![Sent email](https://user-images.githubusercontent.com/13550539/142764816-0109b90f-cef7-4282-8ca1-d81a9024335d.png)
+
+Find the chat id to configure:
+
+```shell
+$ sendmail --get-updates
+```
+
+This asks Telegram for the messages sent to the bot. It fails with a `409
+Conflict` when a webhook is registered for the same bot (for example when the
+bot is shared with Home Assistant), because Telegram allows only one of the two
+at a time. In that case take the chat id from the service that owns the
+webhook, or from a bot such as `@userinfobot`.
 
 Send files (see telegram bot api [limitations](https://core.telegram.org/bots/api#sending-files)):
 
