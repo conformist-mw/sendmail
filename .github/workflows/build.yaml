@@ -37,7 +37,7 @@ jobs:
       - name: Install dev deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y devscripts debhelper dh-exec dh-make golang-go
+          sudo apt-get install -y build-essential devscripts debhelper dh-exec dh-make golang-go
       - name: Configure GPG Key
         run: |
           echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
